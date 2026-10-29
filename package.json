@@ -1,0 +1,8 @@
+{
+  "name": "px-stake-nft-custodial-masterchef",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test invariants/*.test.ts client/*.test.ts"
+  }
+}
