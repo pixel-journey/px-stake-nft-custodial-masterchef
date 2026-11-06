@@ -1,6 +1,15 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { accrue, claim, deposit, MAX_AMOUNT, pending, SCALE, type Pool } from "./chef.ts";
+import {
+  accrue,
+  claim,
+  deposit,
+  withdraw,
+  MAX_AMOUNT,
+  pending,
+  SCALE,
+  type Pool,
+} from "./chef.ts";
 
 const empty = (rate: bigint): Pool => ({
   accPerShare: 0n,
@@ -88,4 +97,45 @@ test("accumulator overflow is refused", () => {
     lastSec: 0n,
   };
   assert.throws(() => accrue(pool, 1n), /acc overflow/);
+});
+
+test("withdraw harvests then reduces weight", () => {
+  const opened = deposit("alice", empty(5n), null, 10n, 0n);
+  const out = withdraw("alice", opened.pool, opened.stake, 4n, 4n);
+  assert.equal(out.harvested, 20n);
+  assert.equal(out.stake.weight, 6n);
+  assert.equal(out.pool.totalWeight, 6n);
+  assert.equal(pending(out.pool, out.stake, 4n), 0n);
+});
+
+test("full withdraw leaves zero weight and zero pool weight", () => {
+  const opened = deposit("alice", empty(5n), null, 10n, 0n);
+  const out = withdraw("alice", opened.pool, opened.stake, 10n, 4n);
+  assert.equal(out.harvested, 20n);
+  assert.equal(out.stake.weight, 0n);
+  assert.equal(out.pool.totalWeight, 0n);
+});
+
+test("withdraw above stake weight is refused", () => {
+  const opened = deposit("alice", empty(5n), null, 10n, 0n);
+  assert.throws(
+    () => withdraw("alice", opened.pool, opened.stake, 11n, 1n),
+    /exceeds stake weight/,
+  );
+});
+
+test("non-owner cannot withdraw", () => {
+  const opened = deposit("alice", empty(5n), null, 10n, 0n);
+  assert.throws(
+    () => withdraw("bob", opened.pool, opened.stake, 1n, 1n),
+    /owner/,
+  );
+});
+
+test("zero withdraw weight is refused", () => {
+  const opened = deposit("alice", empty(5n), null, 10n, 0n);
+  assert.throws(
+    () => withdraw("alice", opened.pool, opened.stake, 0n, 1n),
+    /non-positive/,
+  );
 });
