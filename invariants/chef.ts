@@ -80,3 +80,36 @@ export function deposit(
     harvested,
   };
 }
+
+/**
+ * Reduce stake weight. Accrues, harvests pending on the old weight, then shrinks.
+ * Debt is set to the index of the remaining weight. Does not transfer an NFT or a token.
+ */
+export function withdraw(
+  caller: string,
+  pool: Pool,
+  stake: Stake,
+  weight: bigint,
+  now: bigint,
+): { pool: Pool; stake: Stake; harvested: bigint } {
+  name(caller);
+  if (caller !== stake.owner) throw new Error("not the owner");
+  if (typeof weight !== "bigint" || weight <= 0n) throw new Error("non-positive weight");
+  if (weight > stake.weight) throw new Error("exceeds stake weight");
+  const next = accrue(pool, now);
+  const accrued = (stake.weight * next.accPerShare) / SCALE;
+  const harvested = accrued > stake.debt ? accrued - stake.debt : 0n;
+  if (harvested > MAX_AMOUNT) throw new Error("payout exceeds max");
+  const nextWeight = stake.weight - weight;
+  const nextTotal = next.totalWeight - weight;
+  if (nextTotal < 0n) throw new Error("internal: total weight");
+  return {
+    pool: { ...next, totalWeight: nextTotal },
+    stake: {
+      owner: caller,
+      weight: nextWeight,
+      debt: (nextWeight * next.accPerShare) / SCALE,
+    },
+    harvested,
+  };
+}
