@@ -29,3 +29,14 @@ npm test
 ```
 
 No host is called.
+
+## AtomicAssets v2 — the name "custodial" is not the old holders table
+
+v2 removed the custodial `holders` primitive (and AtomicMarket rentals that used it). This lab never called it. `deposit` / `withdraw` / `claim` move a **weight** and an accumulator. The comment on `withdraw` says it does not transfer an NFT.
+
+A real NFT stake has to take the asset with `atomicassets::transfer` into your contract, then use this math. "Custodial" here means you would own the row. It does not mean `atomicassets::move` or a holders scope. Those actions are not in this tree.
+
+Native backing is also gone. Do not pay rewards by calling `backasset`. Pay `harvested` from your own token contract. The harvested amount is a bigint. This file does not send it.
+
+Map: [ATOMICASSETS-V2.md](https://github.com/pixel-journey/wax-ecosystem-blueprint-catalog/blob/main/ATOMICASSETS-V2.md).
+
