@@ -10,16 +10,20 @@ Private. Tested TypeScript rule. No C++ in this repository. Nothing was staked a
 
 Sibling vault math: [px-stake-ft-single-sided-vault](https://github.com/pixel-journey/px-stake-ft-single-sided-vault).
 
+## Composition note
+
+`chef.composition.test.ts` runs two stakers through time. Harvested plus still-pending equals `elapsed * rewardPerSec`. A second claim at the same timestamp pays 0. A full withdraw moves the next window to whoever is still staked. No token moves.
+
 ## What is true
 
-`npm test` runs `invariants/chef.test.ts` and `client/claim-action.test.ts`.
+`npm test` runs `invariants/chef.test.ts`, `invariants/chef.composition.test.ts`, and `client/claim-action.test.ts`.
 
 - Empty pool moves the clock and does not divide.
 - One staker receives `elapsed * rewardPerSec`; equal weights split emission.
-- `claim` pays once; second claim at the same time pays 0.
+- `claim` pays once; second claim at the same time pays 0; a later window pays only the delta.
 - Deposit / withdraw harvest pending on the old weight first.
-- Full withdraw clears weight; over-withdraw and non-owner refused.
-- Large weights can truncate the accumulator; `2^53+1` rewards stay exact as bigint.
+- Full withdraw clears weight; remaining staker takes the next emission.
+- Over-withdraw and non-owner refused.
 - `client/claim-action.ts` is unsigned; it does not broadcast.
 
 There is no wasm.
