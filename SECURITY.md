@@ -1,12 +1,24 @@
-# Security
+# Security notes — weighted stake rewards
 
-- Only the stake owner may deposit more weight, withdraw weight, or claim.
-- Weight must be a positive integer. Zero is refused on deposit and withdraw.
-- Withdraw above the stake's weight is refused.
-- `now` must not move backwards, or a caller could rewind the accumulator.
-- An empty pool does not divide by zero. It only moves `lastSec`.
-- Reward added in one step must fit in `2^62 - 1`. The accumulator itself must fit in 128 bits.
-- A claim writes `debt` up to the accrued amount before returning. A second claim in the same timestamp pays 0.
-- A withdraw harvests pending on the old weight, then shrinks weight and sets debt to the remaining weight's index. Pending after that withdraw at the same timestamp is 0.
-- The client file builds an action object. It has no signature and it does not submit a transaction.
-- Weight is a bigint, not an NFT in custody. No reward token is transferred.
+## Mitigated in the lab
+
+| Issue | Behavior |
+| --- | --- |
+| Non-owner claim/withdraw | refused |
+| Over-withdraw weight | refused |
+| Time going backwards | refused |
+| Empty pool divide | skipped; clock moves |
+| Acc / reward overflow caps | throws at MAX |
+| Second claim same second | harvested 0 |
+
+## Production still needs
+
+| Concern | Guidance |
+| --- | --- |
+| NFT custody | `atomicassets::transfer` in/out with memo hygiene |
+| Reward funding | Solvent reward vault; do not mint unlimited IOUs silently |
+| Auth | `require_auth(owner)` on claim/withdraw |
+| Acc precision | Choose SCALE for your reward magnitude |
+| Admin | set reward rate under msig; pause path |
+
+Mirror [pxchef](https://github.com/pixel-journey/wax-contract-compiler/tree/main/contracts/pxchef) is accounting-only, not deployed.
