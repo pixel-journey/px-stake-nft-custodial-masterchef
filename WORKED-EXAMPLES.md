@@ -1,33 +1,58 @@
-# Worked examples — acc-per-share
+# Worked examples — acc-per-share MasterChef
 
-`SCALE = 10^12`. Rewards use integer `rewardPerSec`.
+`SCALE = 10^12`. `rewardPerSec` is integer. No NFT custody move in these tests — weight is the stake unit.
 
-## Example A — single staker
+## Empty pool
 
-```text
-pool: totalWeight 0, rewardPerSec 10, lastSec 0
-deposit alice weight 1 at t=0
-// totalWeight 1, debt set to current index
-claim at t=100 → harvested ≈ 100 * 10 = 1000 (exact under scale math)
-claim again at t=100 → harvested 0
-```
+`accrue(empty(5), t=10)` → `accPerShare` stays 0, `lastSec` 10. No division by zero.
 
-## Example B — equal weights split emission
+## Single staker
 
-Two stakers weight 1 each. Emission over Δt is split in half (floor effects possible).
+Deposit alice weight 10, rate 5, at t=0. `pending` at t=4 → **20** (`4 * 5`).
 
-## Example C — deposit harvests old weight first
+Claim → harvested 20. Second claim at same t → 0.
 
-Alice staked; time passes; she deposits more weight → pending on **old** weight is harvested, then debt resets for **new** total weight.
+## Two equal stakes
 
-## Example D — full withdraw
+Alice then bob, weight 10 each, rate 5, t=4:
 
-Alice withdraws all weight → her weight 0; remaining staker receives subsequent emission alone.
+| Staker | pending |
+| --- | --- |
+| alice | 10 |
+| bob | 10 |
+| sum | 20 = 4 * 5 |
 
-## Example E — conservation composition
+Second claim at t=4 still 0 for alice.
 
-`chef.composition.test.ts`: harvested + still-pending equals `elapsed * rewardPerSec` across two stakers (within integer rules).
+## Later claim window
 
-## Example F — unsigned client
+Alice alone: claim at 4 → 20; claim at 4 again → 0; claim at 8 → 20. Total 40 = 8 * 5.
 
-`client/claim-action.ts` builds an **unsigned** action object. It does not broadcast.
+## Deposit mid-stream
+
+Alice weight 10, rate 5. Deposit +10 more at t=4 → harvested **20** on old weight; pending at t=4 is 0. Pending at t=8 with weight 20 → 20. Total harvested + later = 40 = 8 * 5.
+
+## Withdraw
+
+Alice weight 10, withdraw 4 at t=4 → harvested 20, remaining weight 6, pool totalWeight 6, pending 0 at same t.
+
+Full withdraw weight 10 at t=4 → harvested 20, weights 0.
+
+## Remaining staker after full exit
+
+Alice and bob weight 10 each. Alice full withdraw at t=4 → harvested 10. Bob `pending` at t=8 → **30** (10 from first window share + 20 alone in second). Alice harvest + bob pending = 40 = 8 * 5.
+
+## Refusals
+
+| Case | Error |
+| --- | --- |
+| weight 0 deposit/withdraw | non-positive |
+| bob deposits onto alice stake | owner |
+| bob claims/withdraws alice | owner |
+| time 4 after lastSec 5 | backwards |
+| weight SCALE+1, rate 1, 1 sec | pending 0 (dust) |
+| pending would exceed MAX_AMOUNT | reward exceeds max |
+| acc near 2^128 | acc overflow |
+| withdraw 11 of 10 | exceeds stake weight |
+
+Unsigned claim body in `client/` does not broadcast.
