@@ -2,13 +2,13 @@
 
 > **Domain:** custodial NFT stake + emission math  
 > **Sources:** [SOURCES.md](SOURCES.md)  
-> **Catalog:** [px-contract-examples-vault](https://github.com/pixel-journey/px-contract-examples-vault)
+> **Catalog:** `px-contract-examples-vault` (private; not this public course)
 
 **Goal:** MasterChef-style **acc-per-share** emission: harvested plus still-pending equals `elapsed * rewardPerSec`. Deposit/withdraw harvest on the old weight first.
 
 **Code under test:** `npm test` (unit + composition + unsigned claim client). Pure accounting — no wasm in this repo.
 
-**Production mirror:** [pxchef](https://github.com/pixel-journey/wax-contract-compiler/tree/main/contracts/pxchef) — [run 30](https://github.com/pixel-journey/wax-contract-compiler/actions/runs/43213844164). **Not deployed.** Does not custody NFTs or transfer rewards.
+**Build record, not this course:** a private compiler tree `pxchef` exists and is **not deployed**. It does not custody NFTs or transfer rewards. The course is `npm test` in this repository.
 
 ## Learning materials
 

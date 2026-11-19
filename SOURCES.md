@@ -2,7 +2,7 @@
 
 | Source | Use |
 | --- | --- |
-| [atomicassets-contract](https://github.com/pinknetworkx/atomicassets-contract) | Transfer NFT into custody |
+| [atomicassets-contract v2.0.0](https://github.com/atomicassets/atomicassets-contract/releases/tag/v2.0.0) | A real custody is `atomicassets::transfer`. v2 removed the old `holders` primitive. This lab does not send that transfer. |
 | [WAX How-To AtomicAssets](https://docs.wax.io/build/tutorials/howto_atomicassets) | Ownership model |
 | [eosio.token](https://github.com/eosio/eosio.contracts) | Reward token, **not** `backasset` |
 | [docs.wax.io](https://docs.wax.io/) | Contracts |
@@ -25,7 +25,7 @@ MasterChef is a widely known **index** pattern (accrue per share). This lab is a
 | Lab | Topic |
 | --- | --- |
 | [non-custodial scanner](https://github.com/pixel-journey/px-stake-nft-noncustodial-scanner) | Owner still holds the NFT |
-| [FT vault](https://github.com/pixel-journey/px-stake-ft-single-sided-vault) | Share math |
-| [dust](https://github.com/pixel-journey/px-token-dust-truncation-visualizer) | Floor without a scale |
 | [virtual balance](https://github.com/pixel-journey/px-game-virtual-balance-ledger) | Non-transferable points |
-| [treasury path](https://github.com/pixel-journey/px-contract-examples-vault/blob/main/docs/TREASURY-TOKEN-LEARNING-PATH.md) | Curriculum order |
+| FT single-sided vault | still private (`px-stake-ft-single-sided-vault`); not this course |
+| integer dust lab | still private (`px-token-dust-truncation-visualizer`); the dust case in this repo is the `SCALE` floor |
+| treasury curriculum index | still private (`px-contract-examples-vault`) |

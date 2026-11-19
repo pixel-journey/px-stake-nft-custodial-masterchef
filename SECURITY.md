@@ -34,4 +34,4 @@ Accrue **before** any deposit, withdraw, or claim that depends on the index. Deb
 
 ## Honesty limits
 
-Weight accounting only. No NFT move, no reward token move. Mirror [pxchef](https://github.com/pixel-journey/wax-contract-compiler/tree/main/contracts/pxchef) is accounting-only, not deployed.
+Weight accounting only. No NFT move, no reward token move. Mirror `wax-contract-compiler` (private; not this public course) is accounting-only, not deployed.

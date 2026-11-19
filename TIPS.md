@@ -29,8 +29,8 @@ Do **not** pay rewards via AtomicAssets `backasset`. Use your own token contract
 | Boost by template | Multiply weight, re-test debt |
 | Reward token tax | [transfer tax](https://github.com/pixel-journey/px-token-transfer-tax-burn-treasury) on the claim transfer |
 | Pause claims | [pausable](https://github.com/pixel-journey/px-token-pausable-emergency-guard) |
-| FT shares instead of NFT weight | [single-sided vault](https://github.com/pixel-journey/px-stake-ft-single-sided-vault) |
+| FT shares instead of NFT weight | `px-stake-ft-single-sided-vault` (private; not this public course) |
 
 ## Related
 
-[non-custodial scanner](https://github.com/pixel-journey/px-stake-nft-noncustodial-scanner) · [FT vault](https://github.com/pixel-journey/px-stake-ft-single-sided-vault) · [pxchef mirror](https://github.com/pixel-journey/wax-contract-compiler/tree/main/contracts/pxchef) · [AA v2 notes](https://github.com/pixel-journey/wax-ecosystem-blueprint-catalog/blob/main/ATOMICASSETS-V2.md)
+[non-custodial scanner](https://github.com/pixel-journey/px-stake-nft-noncustodial-scanner) · `px-stake-ft-single-sided-vault` (private; not this public course) · `wax-contract-compiler` (private; not this public course) · `wax-ecosystem-blueprint-catalog` (private; not this public course)
