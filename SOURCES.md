@@ -10,7 +10,15 @@
 
 MasterChef is a widely known **index** pattern (accrue per share). This lab is an original teaching port of that idea, not a copy of any third-party farm contract.
 
-**Custodial:** the contract account holds the NFT. Accrue **before** every weight change. Empty pool still advances `lastSec`.
+## Product facts locked by tests
+
+- **Custodial:** the contract account holds the NFT. Weight is a bigint stake unit in the tests.
+- Accrue **before** every weight change. Deposit mid-stream harvests the old weight first.
+- Empty pool (`totalWeight === 0`) advances `lastSec` and does **not** divide.
+- `SCALE = 10^12`. Pending can still floor to 0 (dust) when weight is larger than `reward * SCALE`.
+- Claim sets **debt** to the current index. Second claim at the same timestamp harvests **0**.
+- Time must not go backwards. Reward / acc overflow caps refuse oversized values.
+- This is **not** the non-custodial scanner. There the player keeps the NFT and claim re-reads owner.
 
 ## Related labs
 
@@ -18,5 +26,6 @@ MasterChef is a widely known **index** pattern (accrue per share). This lab is a
 | --- | --- |
 | [non-custodial scanner](https://github.com/pixel-journey/px-stake-nft-noncustodial-scanner) | Owner still holds the NFT |
 | [FT vault](https://github.com/pixel-journey/px-stake-ft-single-sided-vault) | Share math |
+| [dust](https://github.com/pixel-journey/px-token-dust-truncation-visualizer) | Floor without a scale |
 | [virtual balance](https://github.com/pixel-journey/px-game-virtual-balance-ledger) | Non-transferable points |
 | [treasury path](https://github.com/pixel-journey/px-contract-examples-vault/blob/main/docs/TREASURY-TOKEN-LEARNING-PATH.md) | Curriculum order |
