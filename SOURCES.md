@@ -26,6 +26,6 @@ MasterChef is a widely known **index** pattern (accrue per share). This lab is a
 | --- | --- |
 | [non-custodial scanner](https://github.com/pixel-journey/px-stake-nft-noncustodial-scanner) | Owner still holds the NFT |
 | [virtual balance](https://github.com/pixel-journey/px-game-virtual-balance-ledger) | Non-transferable points |
-| FT single-sided vault | still private (`px-stake-ft-single-sided-vault`); not this course |
-| integer dust lab | still private (`px-token-dust-truncation-visualizer`); the dust case in this repo is the `SCALE` floor |
+| FT single-sided vault | [px-stake-ft-single-sided-vault](https://github.com/pixel-journey/px-stake-ft-single-sided-vault) |
+| integer dust lab | [px-token-dust-truncation-visualizer](https://github.com/pixel-journey/px-token-dust-truncation-visualizer) — the dust case in this repo is the `SCALE` floor |
 | treasury curriculum index | still private (`px-contract-examples-vault`) |
